@@ -4,40 +4,61 @@ from PIL import Image
 import io
 import os 
 from dotenv import load_dotenv
+import subprocess
 
 load_dotenv()
 client = OpenAI()
 
-peppers = Image.open("peppers.jpg")
-peppers.resize((216, 216)).save("mini_peppers.jpg", optimize=True, quality=95)
+path = "/home/pk/PK2.0/photo.jpg"
 
-# Function to encode image to base64
-def encode_image_to_base64(image_path):
+def take_photo(photo_path):
+    # Command to take a photo with libcamera-still
+    command = ['libcamera-still', '-o', photo_path]
+
+    # Run the command
+    subprocess.run(command)
+
+    print(f"Photo taken and saved to {photo_path}")
+
+# Example usage
+take_photo(path)
+
+
+def process_image(path):
+  # Resize the image
+  peppers = Image.open(image_path)
+  peppers.resize((216, 216)).save("mini_peppers.jpg", optimize=True, quality=95)
+
+  # Function to encode image to base64
+  def encode_image_to_base64(image_path):
     with Image.open(image_path) as image:
-        buffered = io.BytesIO()
-        image.save(buffered, format="JPEG")
-        return base64.b64encode(buffered.getvalue()).decode()
+      buffered = io.BytesIO()
+      image.save(buffered, format="JPEG")
+      return base64.b64encode(buffered.getvalue()).decode()
 
-# Encode your image
-encoded_image = encode_image_to_base64("mini_peppers.jpg")
+  # Encode the image
+  encoded_image = encode_image_to_base64("mini_peppers.jpg")
 
-response = client.chat.completions.create(
-  model="gpt-4-vision-preview",
-  messages=[
-    {
-      "role": "user",
-      "content": [
-        {"type": "text", "text": "List the food items in this image"},
-        {
-          "type": "image_url",
-          "image_url": {
-            "url": f"data:image/jpeg;base64,{encoded_image}",
+  response = client.chat.completions.create(
+    model="gpt-4-vision-preview",
+    messages=[
+      {
+        "role": "user",
+        "content": [
+          {"type": "text", "text": "List the food items in this image"},
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": f"data:image/jpeg;base64,{encoded_image}",
             },
-        },
-      ],
-    }
-  ],
-  max_tokens=300,
-)
+          },
+        ],
+      }
+    ],
+    max_tokens=300,
+  )
 
-print(response.choices[0].message.content)
+  return response.choices[0].message.content
+
+
+print(process_image(path))
