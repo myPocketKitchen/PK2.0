@@ -45,7 +45,7 @@ def process_image(image_path):
       {
         "role": "user",
         "content": [
-          {"type": "text", "text": "List the food items in this image"},
+          {"type": "text", "text": "You are an expert in identifying items of food from images. List the food items in this image. Give responses only in the format 'Food item: [food item]'"},
           {
             "type": "image_url",
             "image_url": {
