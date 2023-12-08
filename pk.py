@@ -24,7 +24,7 @@ def take_photo(photo_path):
 take_photo(path)
 
 
-def process_image(path):
+def process_image(image_path):
   # Resize the image
   peppers = Image.open(image_path)
   peppers.resize((216, 216)).save("mini_peppers.jpg", optimize=True, quality=95)
