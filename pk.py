@@ -27,6 +27,7 @@ take_photo(path)
 def process_image(image_path):
   # Resize the image
   peppers = Image.open(image_path)
+  print(peppers.size)
   peppers.resize((216, 216)).save("mini_peppers.jpg", optimize=True, quality=95)
 
   # Function to encode image to base64
