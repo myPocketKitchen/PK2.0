@@ -11,27 +11,24 @@ client = OpenAI()
 
 path = "/home/pk/PK2.0/photo.jpg"
 
-def take_photo(photo_path):
-    # Command to take a photo with libcamera-still
-    command = ['libcamera-still', '-o', photo_path]
 
-    # Run the command
-    subprocess.run(command)
+# def take_photo(photo_path):
+#     # Command to take a photo with libcamera-still
+#     command = ['libcamera-still', '-o', photo_path]
 
-    print(f"Photo taken and saved to {photo_path}")
+#     # Run the command
+#     subprocess.run(command)
 
-# Example usage
-take_photo(path)
+#     print(f"Photo taken and saved to {photo_path}")
 
 
 def process_image(image_path):
   # Resize the image
-  peppers = Image.open(image_path)
-  image_size = peppers.size
-  peppers.resize((image_size[0] // 2, image_size[1] // 2)).save("mini_peppers.jpg", optimize=True, quality=95)
+  fridge_pic = Image.open(image_path)
+  image_size = fridge_pic.size
+  fridge_pic.resize((image_size[0] // 2, image_size[1] // 2)).save("mini_photo.jpg", optimize=True, quality=95)
   
-  print(f"Image resized to {peppers.size}")
-  # peppers.resize((216, 216)).save("mini_peppers.jpg", optimize=True, quality=95)
+  print(f"Image resized to {fridge_pic.size}")
 
   # Function to encode image to base64
   def encode_image_to_base64(image_path):
@@ -41,7 +38,7 @@ def process_image(image_path):
       return base64.b64encode(buffered.getvalue()).decode()
 
   # Encode the image
-  encoded_image = encode_image_to_base64("mini_peppers.jpg")
+  encoded_image = encode_image_to_base64("mini_photo.jpg")
 
   response = client.chat.completions.create(
     model="gpt-4-vision-preview",
@@ -64,5 +61,24 @@ def process_image(image_path):
 
   return response.choices[0].message.content
 
+def get_recipes(ingredients):
+  response = client.chat.completions.create(
+    model="gpt-4-vision-preview",
+    messages=[
+      {
+        "role": "user",
+        "content": [
+          {"type": "text", "text": "You are an expert in coming up with recipes from a list of ingredients. Given a list of ingredients, suggest a recipe that can be made from them. Give responses only in the format 'You could make [recipe suggestion]. Here's the recipe: [recipe for suggestion]'"},
+          {
+            "type": "text",
+            "text": f"{ingredients}",
+          },
+        ],
+      }
+    ],
+    max_tokens=300,
+  )
+  return response.choices[0].message.content
 
-print(process_image(path))
+# take_photo(path)
+# print(process_image(path))
