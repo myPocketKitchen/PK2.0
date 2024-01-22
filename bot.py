@@ -10,6 +10,7 @@ load_dotenv()
 auth_token = os.getenv("AUTH_TOKEN")
 AUTH_ID = os.getenv("AUTH_ID")
 
+
 # bot = Bot(token=API_TOKEN)
 # dp = Dispatcher(bot)
 
@@ -18,15 +19,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm the PK2.0 Bot, please use a command to start.")
 
 async def ingredients(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    messsage = update.effective_message  # Extracts the message from the update
+    message = update.effective_message  # Extracts the message from the update
     print("/ingredients command received")
     if str(message.from_user.id) == AUTH_ID:
         # Authorized user; perform the action
-        # await context.bot.send_message(chat_id=update.effective_chat.id, text="You are authorized to perform this action.")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="You are authorized to perform this action.")
 
         # Run OPENAI API Call
         print("User is authorized, running API call")
         global ingredients_list
+        path = "/home/pk/PK2.0/photo.jpg"
         ingredients_list = process_image(path)
         await context.bot.send_message(chat_id=update.effective_chat.id, text=ingredients_list)
 
