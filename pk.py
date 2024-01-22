@@ -12,14 +12,15 @@ client = OpenAI()
 path = "/home/pk/PK2.0/photo.jpg"
 
 
-# def take_photo(photo_path):
-#     # Command to take a photo with libcamera-still
-#     command = ['libcamera-still', '-o', photo_path]
+def take_photo():
+    photo_path = "/home/pk/PK2.0/photo.jpg"
+    # Command to take a photo with libcamera-still
+    command = ['libcamera-still', '-o', photo_path]
 
-#     # Run the command
-#     subprocess.run(command)
+    # Run the command
+    subprocess.run(command)
 
-#     print(f"Photo taken and saved to {photo_path}")
+    print(f"Photo taken and saved to {photo_path}")
 
 
 def process_image(image_path):
@@ -79,6 +80,3 @@ def get_recipes(ingredients):
     max_tokens=300,
   )
   return response.choices[0].message.content
-
-# take_photo(path)
-# print(process_image(path))
