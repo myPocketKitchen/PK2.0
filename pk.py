@@ -27,9 +27,10 @@ def process_image(image_path):
   # Resize the image
   fridge_pic = Image.open(image_path)
   image_size = fridge_pic.size
-  fridge_pic.resize((image_size[0] // 2, image_size[1] // 2)).save("mini_photo.jpg", optimize=True, quality=95)
-  
-  print(f"Image resized to {fridge_pic.size}")
+  fridge_pic.resize((image_size[0] // 5, image_size[1] // 5)).save("mini_photo.jpg", optimize=True, quality=95)
+  # mini_pic = Image.open("mini_photo.jpg")
+
+  # print(f"Image resized to {mini_pic.size}")
 
   # Function to encode image to base64
   def encode_image_to_base64(image_path):
@@ -47,7 +48,7 @@ def process_image(image_path):
       {
         "role": "user",
         "content": [
-          {"type": "text", "text": "You are an expert in identifying items of food from images. List the food items in this image. Give responses only in the format 'Food item: [food item]'"},
+          {"type": "text", "text": "You are an expert in identifying items of food from images of the inside of a fridge. List the food items in this image and specify the quantity of each and the ripeness / state of decay, if you can. Tupperware containers are usually contain leftovers. Give responses only in the format: 'In your fridge, you have: - [food item]\n - [food item]\n - [food item]'"},
           {
             "type": "image_url",
             "image_url": {
